@@ -17,6 +17,27 @@ enum custom_keycodes {
   RGB_SLD
 };
 
+enum {
+  TD_CTRL_HOME,
+  TD_CTRL_END,
+};
+
+typedef struct {
+  uint16_t st;
+  uint16_t dt;
+} tapped_key_t;
+
+void dance_double_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_double_reset(qk_tap_dance_state_t *state, void *user_data);
+
+#define ACTION_TAP_DANCE_DOUBLE_MODDED(kc1, kc2) \
+  { .fn = {NULL, dance_double_finished, dance_double_reset}, .user_data = (void *)&((tapped_key_t){ .st=kc1, .dt=kc2})}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [TD_CTRL_HOME] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_HOME, LCTL(KC_HOME)),
+  [TD_CTRL_END] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_END, LCTL(KC_END)),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
@@ -25,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | Del    |   Q  |   W  |   F  |   P  |   G  |  L1|           |  L2  |   J  |   L  |   U  |   Y  |   ;  |   \    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | BkSp   |   A  |   R  |   S  |   T  |   D  |------|           |------|   H  |   N  |   E  |   I  |O / L3|' / Cmd |
+ * | LEADER |   A  |   R  |   S  |   T  |   D  |------|           |------|   H  |   N  |   E  |   I  |O / L3|' / Cmd |
  * |--------+------+------+------+------+------| Caps |           |Insert|------+------+------+------+------+--------|
  * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   K  |   M  |   ,  |   .  |//Ctrl| RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
@@ -43,12 +64,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // left hand
   KC_EQL,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_LEFT,              KC_RGHT,      KC_6,    KC_7,    KC_8,    KC_9,              KC_0,           KC_MINS,
   KC_DEL,          KC_Q,        KC_W,          KC_F,    KC_P,    KC_G,    TG(QWERTY),           TG(SYMB),     KC_J,    KC_L,    KC_U,    KC_Y,              KC_SCLN,        KC_NUBS,
-  KC_BSPC,         KC_A,        KC_R,          KC_S,    LSFT_T(KC_T),    KC_D,                                        KC_H,    RSFT_T(KC_N),    KC_E,    KC_I,    LT(MDIA, KC_O),           GUI_T(KC_QUOT),
+  KC_LEAD,         KC_A,        KC_R,          KC_S,    LSFT_T(KC_T),    KC_D,                                        KC_H,    RSFT_T(KC_N),    KC_E,    KC_I,    LT(MDIA, KC_O),           GUI_T(KC_QUOT),
   KC_LSPO,         CTL_T(KC_Z), ALT_T(KC_X),          GUI_T(KC_C),    KC_V,    KC_B,    KC_CLCK,                  KC_INS, KC_K,    KC_M,    RGUI_T(KC_COMM), ALT_T(KC_DOT),           CTL_T(KC_SLSH), KC_RSPC,
-  LT(SYMB,KC_GRV), KC_QUOT,     LALT(KC_LSFT), KC_LEFT, KC_RGHT,                                              KC_UP,   KC_DOWN, KC_LBRC, KC_RBRC, TT(SYMB),
-                                                           ALT_T(KC_APP), KC_LGUI,                KC_LALT, CTL_T(KC_ESC),
-                                                                          KC_HOME,                 KC_PGUP,
-                                                         KC_SPC, KC_BSPC, KC_END,                  KC_PGDN, KC_TAB, KC_ENT
+  LT(SYMB,KC_GRV), KC_ESC,     LALT(KC_LSFT), KC_LEFT, KC_RGHT,                                              KC_UP,   KC_DOWN, KC_LBRC, KC_RBRC, TT(SYMB),
+                                                           TD(TD_CTRL_HOME), TD(TD_CTRL_END),                KC_LEFT, KC_RGHT,
+                                                                          KC_PGUP,                 KC_UP,
+                                                         KC_SPC, KC_BSPC, KC_PGDN,                  KC_DOWN, KC_TAB, KC_ENT
 ),
 /* Keymap 1: QWERTY layer
  *
@@ -107,7 +128,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [SYMB] = LAYOUT_ergodox_pretty(
   // left hand
   VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_TRNS,     KC_TRNS, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-  KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_PIPE, KC_TRNS,     KC_TRNS, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
+  KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_NUHS, KC_TRNS,     KC_TRNS, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
   KC_TRNS, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,               KC_DOWN, KC_4,    KC_5,    KC_6,    KC_PLUS, KC_TRNS,
   KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, KC_TRNS,     KC_TRNS, KC_AMPR, KC_1,    KC_2,    KC_3,    KC_BSLS, KC_TRNS,
   EEP_RST, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                                         KC_TRNS, KC_DOT,  KC_0,    KC_EQL,  KC_TRNS,
@@ -240,3 +261,37 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
   return state;
 };
+
+LEADER_EXTERNS();
+
+void matrix_scan_user(void) {
+  LEADER_DICTIONARY(){
+    leading = false;
+    leader_end();
+    SEQ_ONE_KEY(KC_N) {
+      SEND_STRING("Michael Whapples");
+	}
+    SEQ_TWO_KEYS(KC_Z, KC_Q) {
+      layer_on(QWERTY);
+    }
+    SEQ_TWO_KEYS(KC_Z, KC_C) {
+      layer_off(QWERTY);
+    }
+  }
+}
+
+void dance_double_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+	  register_code16(((tapped_key_t *)user_data)->st);
+  } else {
+	  register_code16(((tapped_key_t *)user_data)->dt);
+  }
+}
+
+void dance_double_reset(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		unregister_code16(((tapped_key_t *)user_data)->st);
+	} else {
+		unregister_code16(((tapped_key_t *)user_data)->dt);
+	}
+}
