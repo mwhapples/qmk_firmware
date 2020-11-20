@@ -1,0 +1,10 @@
+#pragma once
+
+#undef LEADER_TIMEOUT
+#define LEADER_TIMEOUT 300
+
+#undef LEADER_PER_KEY_TIMING
+#define LEADER_PER_KEY_TIMING
+
+#undef TAPPING_TERM
+#define TAPPING_TERM 175
