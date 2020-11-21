@@ -1,5 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
+#include "keymap_uk.h"
+
 
 enum layers {
     BASE, // default layer
@@ -20,6 +22,8 @@ enum custom_keycodes {
 enum {
   TD_CTRL_HOME,
   TD_CTRL_END,
+  TD_ALT_F4,
+  TD_SHIFT_F10,
 };
 
 typedef struct {
@@ -36,6 +40,8 @@ void dance_double_reset(qk_tap_dance_state_t *state, void *user_data);
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_CTRL_HOME] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_HOME, LCTL(KC_HOME)),
   [TD_CTRL_END] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_END, LCTL(KC_END)),
+  [TD_ALT_F4] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_F4, LALT(KC_F4)),
+  [TD_SHIFT_F10] = ACTION_TAP_DANCE_DOUBLE_MODDED(KC_F10, S(KC_F10)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -62,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [BASE] = LAYOUT_ergodox_pretty(
   // left hand
-  KC_EQL,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_LEFT,              KC_RGHT,      KC_6,    KC_7,    KC_8,    KC_9,              KC_0,           KC_MINS,
+  KC_EQL,          KC_F1,        KC_F2,          KC_F3,    TD(TD_ALT_F4),    KC_F5,    KC_F6,              KC_F7,      KC_F8,    KC_F9,    TD(TD_SHIFT_F10),    KC_F11,              KC_F12,           KC_MINS,
   KC_DEL,          KC_Q,        KC_W,          KC_F,    KC_P,    KC_G,    TG(QWERTY),           TG(SYMB),     KC_J,    KC_L,    KC_U,    KC_Y,              KC_SCLN,        KC_NUBS,
   KC_LEAD,         KC_A,        KC_R,          KC_S,    LSFT_T(KC_T),    KC_D,                                        KC_H,    RSFT_T(KC_N),    KC_E,    KC_I,    LT(MDIA, KC_O),           GUI_T(KC_QUOT),
   KC_LSPO,         CTL_T(KC_Z), ALT_T(KC_X),          GUI_T(KC_C),    KC_V,    KC_B,    KC_CLCK,                  KC_INS, KC_K,    KC_M,    RGUI_T(KC_COMM), ALT_T(KC_DOT),           CTL_T(KC_SLSH), KC_RSPC,
@@ -127,8 +133,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [SYMB] = LAYOUT_ergodox_pretty(
   // left hand
-  VRSN,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_TRNS,     KC_TRNS, KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
-  KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_NUHS, KC_TRNS,     KC_TRNS, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_F12,
+  VRSN,    KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,     KC_TRNS, KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,   KC_TRNS,  KC_TRNS,
+  KC_TRNS, KC_EXLM, KC_AT,   KC_LCBR, KC_RCBR, KC_NUHS, KC_TRNS,     KC_TRNS, KC_UP,   KC_7,    KC_8,    KC_9,    KC_ASTR, KC_TRNS,
   KC_TRNS, KC_HASH, KC_DLR,  KC_LPRN, KC_RPRN, KC_GRV,               KC_DOWN, KC_4,    KC_5,    KC_6,    KC_PLUS, KC_TRNS,
   KC_TRNS, KC_PERC, KC_CIRC, KC_LBRC, KC_RBRC, KC_TILD, KC_TRNS,     KC_TRNS, KC_AMPR, KC_1,    KC_2,    KC_3,    KC_BSLS, KC_TRNS,
   EEP_RST, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                                         KC_TRNS, KC_DOT,  KC_0,    KC_EQL,  KC_TRNS,
